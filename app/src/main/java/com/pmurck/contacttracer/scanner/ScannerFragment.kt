@@ -17,9 +17,13 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.findNavController
+import com.pmurck.contacttracer.HomeViewModelFactory
 import com.pmurck.contacttracer.R
+import com.pmurck.contacttracer.database.AppDatabase
+import com.pmurck.contacttracer.databinding.FragmentScannerBinding
 
 class ScannerFragment : Fragment() {
 
@@ -30,18 +34,18 @@ class ScannerFragment : Fragment() {
 
     private lateinit var textureView: PreviewView
 
-    private lateinit var viewModel: ScannerViewModel
+    private val viewModelFactory
+        get() = ScannerViewModelFactory(AppDatabase.getInstance(requireActivity().application).stayDAO)
+    private val scannerViewModel: ScannerViewModel by viewModels { viewModelFactory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
+        val binding = FragmentScannerBinding.inflate(inflater, container, false)
 
-
-        val viewgroup = inflater.inflate(R.layout.fragment_scanner, container, false)
-
-        textureView = viewgroup.findViewById(R.id.texture_view)
+        textureView = binding.textureView
 
         // Request camera permissions
         if (isCameraPermissionGranted()) {
@@ -50,14 +54,21 @@ class ScannerFragment : Fragment() {
             this.requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
         }
 
-        return viewgroup
+        binding.scannerViewModel = scannerViewModel
+        binding.lifecycleOwner = this
 
-    }
+        scannerViewModel.navigateToHome.observe(viewLifecycleOwner) {
+            if (it == true){
+                findNavController().popBackStack() //TODO: ver usar una action en particular para esto
+            }
+        }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ScannerViewModel::class.java)
-        // TODO: Use the ViewModel
+        scannerViewModel.qrScanStatus.observe(viewLifecycleOwner) {
+            Log.d("ScannerFragment", "New Text: ${it}")
+        }
+
+        return binding.root
+
     }
 
     private fun startCamera() {
@@ -78,10 +89,11 @@ class ScannerFragment : Fragment() {
                 .build()
 
             val qrCodeAnalyzer = QrCodeAnalyzer { qrCodes ->
-                qrCodes.forEach {
+                Log.d("MainActivity", "QR Codes detected: ${qrCodes.size}")
+                scannerViewModel.onBarcodesDetected(qrCodes.map{ it.rawValue }.filterNotNull())
+                /*qrCodes.forEach {
                     Log.d("MainActivity", "QR Code detected: ${it.rawValue}")
-                    Toast.makeText(this.requireActivity(), "QR Code detected: ${it.rawValue}", Toast.LENGTH_LONG)
-                }
+                }*/
             }
 
             imageAnalysis.setAnalyzer(executor, qrCodeAnalyzer)
