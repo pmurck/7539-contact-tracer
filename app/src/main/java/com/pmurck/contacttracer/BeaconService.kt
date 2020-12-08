@@ -16,7 +16,7 @@ import com.mohsenoid.closetome.CloseToMe
 import com.mohsenoid.closetome.CloseToMeCallback
 import com.mohsenoid.closetome.CloseToMeState
 import com.pmurck.contacttracer.database.PingDAO
-import com.pmurck.contacttracer.database.PingDatabase
+import com.pmurck.contacttracer.database.AppDatabase
 import com.pmurck.contacttracer.model.Ping
 import kotlinx.coroutines.launch
 import java.util.*
@@ -46,7 +46,7 @@ class BeaconService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
 
-        pingDAO = PingDatabase.getInstance(application).pingDAO
+        pingDAO = AppDatabase.getInstance(application).pingDAO
 
         userUuid = UUID.fromString(UUID.randomUUID().toString().replaceBefore("-", dni.toString().padStart(8, '0')))
 
