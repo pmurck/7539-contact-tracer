@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:textAlignment="center"
-            android:text="TextView"
+            android:text="@{homeViewModel.qrStatusText}"
             tools:text="Contabilizando estadía ..."/>
 
         <Button

@@ -19,6 +19,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.mohsenoid.closetome.CloseToMeState
+import com.pmurck.contacttracer.database.AppDatabase
 import com.pmurck.contacttracer.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -35,8 +36,10 @@ class HomeFragment : Fragment() {
         )
     }
 
+    private val viewModelFactory
+        get() = HomeViewModelFactory(AppDatabase.getInstance(requireActivity().application).stayDAO)
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels{viewModelFactory}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +56,8 @@ class HomeFragment : Fragment() {
 
         }
 
+        binding.homeViewModel = viewModel
+        binding.lifecycleOwner = this
         //binding.user.text = "USER TODO"//"User: $userUuid"
         //binding.log.movementMethod = ScrollingMovementMethod()
         binding.start.setOnClickListener { onStartClick() }
