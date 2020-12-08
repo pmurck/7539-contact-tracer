@@ -8,6 +8,7 @@ import com.pmurck.contacttracer.model.Ping
 @Dao
 interface PingDAO {
 
+    // TODO: insert vararg
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertIgnoreExisting(ping: Ping)
 
@@ -22,7 +23,7 @@ interface PingDAO {
     suspend fun update(ping: Ping)
 
     @Query("SELECT * from bt_beacon_ping WHERE id = :key")
-    suspend fun get(key: Long): Ping
+    suspend fun get(key: Long): Ping?
 
 
     /**
