@@ -6,6 +6,10 @@ import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +30,16 @@ class MainActivity : AppCompatActivity() {
                 notificationManager.createNotificationChannel(channel)
             }
         }
+
+        //Worker setup TODO: cambiar intervalo
+        val contactGenWorkRequest = PeriodicWorkRequestBuilder<ContactGenerationWorker>(1, TimeUnit.HOURS)
+            .build()
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+            "contactGeneration",
+            ExistingPeriodicWorkPolicy.KEEP,
+            contactGenWorkRequest
+        )
+
     }
 
 }

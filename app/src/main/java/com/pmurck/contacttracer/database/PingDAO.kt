@@ -34,4 +34,9 @@ interface PingDAO {
     @Query("SELECT * FROM bt_beacon_ping ORDER BY id DESC")
     fun getAll(): LiveData<List<Ping>>
 
+    @Query("SELECT DISTINCT dni_number FROM bt_beacon_ping WHERE unix_time_stamp >= :timestamp")
+    suspend fun getUniqueDNIsSince(timestamp: Long): List<Int>
+
+    @Query("SELECT * FROM bt_beacon_ping WHERE dni_number == :dni AND unix_time_stamp >= :timestamp ORDER BY unix_time_stamp ASC")
+    suspend fun getFromDniSince(dni: Int, timestamp: Long): List<Ping>
 }
