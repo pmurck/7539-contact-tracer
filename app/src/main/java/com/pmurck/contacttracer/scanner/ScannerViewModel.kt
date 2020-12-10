@@ -28,10 +28,10 @@ class ScannerViewModel(
     init {
         // TODO: cambiar o de alguna forma removeObserver
         currentStay.observeForever{
-            stayPolicy = if (it == null) {
-                ::saveStay
+            if (it == null) {
+                stayPolicy = ::saveStay
             } else {
-                ::updateStay
+                stayPolicy = ::updateStay
             }
         }
     }
