@@ -16,7 +16,6 @@ class ContactGenerationWorker(appContext: Context, workerParams: WorkerParameter
     companion object {
         private const val MIN_CONTACT_TIME_IN_SECONDS = 15*60
         private const val MAX_TIME_DIFF_BETWEEN_PINGS_FOR_CONTACT_IN_SECONDS = 1*60
-        private const val CONTACT_GEN_TIMESTAMP_PREF_KEY = "last_contacts_update_timestamp"
     }
 
     /*
@@ -30,8 +29,8 @@ class ContactGenerationWorker(appContext: Context, workerParams: WorkerParameter
     }
 
     override suspend fun doWork(): Result {
-        val sharedPrefs = applicationContext.getSharedPreferences("CONFIG", Context.MODE_PRIVATE)
-        val lastContactGenerationTimestamp = sharedPrefs.getLong(CONTACT_GEN_TIMESTAMP_PREF_KEY, 0L)
+        val sharedPrefs = applicationContext.getSharedPreferences(Constants.SHARED_PREFS_CONFIG_KEY, Context.MODE_PRIVATE)
+        val lastContactGenerationTimestamp = sharedPrefs.getLong(Constants.CONTACT_GEN_TIMESTAMP_PREF_KEY, 0L)
         val currentContactGenerationTimestamp = System.currentTimeMillis()
         Log.d("ContactGenWorker", "Iniciando el worker, tomamos pings desde ${Date(lastContactGenerationTimestamp)}")
 
@@ -79,7 +78,7 @@ class ContactGenerationWorker(appContext: Context, workerParams: WorkerParameter
 
         //actualizar las preferences para la proxima ejecución
         sharedPrefs.edit {
-            putLong(CONTACT_GEN_TIMESTAMP_PREF_KEY, currentContactGenerationTimestamp)
+            putLong(Constants.CONTACT_GEN_TIMESTAMP_PREF_KEY, currentContactGenerationTimestamp)
         }
 
         return Result.success()
