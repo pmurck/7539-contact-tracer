@@ -60,7 +60,7 @@ class BeaconService : LifecycleService() {
 
 
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Beacon Runnning")
+            .setContentTitle("Rastreador por Bluetooth corriendo en segundo plano")
             //.setContentText(getText(R.string.notification_message))
             .setSmallIcon(R.drawable.icon_beacon_running_notification)
             .setContentIntent(pendingIntent)
@@ -146,6 +146,7 @@ class BeaconService : LifecycleService() {
 
                     beacons.values.forEach { beacon ->
                         lifecycleScope.launch {
+                            // TODO: filtrar mejor los resultados que sabemos se repiten
                             pingDAO.insertIgnoreExisting(Ping(dniNumber = beacon.userUuid!!.substringBefore('-').toInt(), unixTimeStamp = beacon.lastSeen, distance = beacon.distanceInMeter))
                         }
                     }
