@@ -13,9 +13,16 @@
         <action
             android:id="@+id/action_homeFragment_to_scannerFragment"
             app:destination="@id/scannerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_contactListFragment"
+            app:destination="@id/contactListFragment" />
     </fragment>
     <fragment
         android:id="@+id/scannerFragment"
         android:name="com.pmurck.contacttracer.scanner.ScannerFragment"
         android:label="ScannerFragment" />
+    <fragment
+        android:id="@+id/contactListFragment"
+        android:name="com.pmurck.contacttracer.contacts.ContactListFragment"
+        android:label="ContactListFragment" />
 </navigation>

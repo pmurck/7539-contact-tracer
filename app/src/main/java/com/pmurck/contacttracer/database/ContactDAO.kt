@@ -1,5 +1,6 @@
 package com.pmurck.contacttracer.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -21,4 +22,7 @@ interface ContactDAO {
 
     @Query("SELECT * from contact WHERE id = :key")
     suspend fun get(key: Long): Contact?
+
+    @Query("SELECT * from contact ORDER BY timestamp_start DESC")
+    fun getAll(): LiveData<List<Contact>>
 }
