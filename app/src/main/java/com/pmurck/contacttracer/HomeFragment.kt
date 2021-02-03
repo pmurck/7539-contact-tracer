@@ -1,26 +1,25 @@
 package com.pmurck.contacttracer
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.mohsenoid.closetome.CloseToMeState
 import com.pmurck.contacttracer.database.AppDatabase
 import com.pmurck.contacttracer.databinding.FragmentHomeBinding
+import kotlin.random.Random
 
 class HomeFragment : Fragment() {
 
@@ -54,6 +53,14 @@ class HomeFragment : Fragment() {
         if (anyPermissionsNotGranted) {
             requestPermissions(permissions, PERMISSIONS_REQUEST)
 
+        }
+
+        // TODO: Permitir cambiar /primer carga de DNI/device id
+        val sharedPrefs = requireActivity().applicationContext.getSharedPreferences(Constants.SHARED_PREFS_CONFIG_NAME, Context.MODE_PRIVATE)
+        if (!sharedPrefs.contains(Constants.DEVICE_ID_PREF_KEY)) {
+            sharedPrefs.edit {
+                putInt(Constants.DEVICE_ID_PREF_KEY, Random.nextInt(1_000_000,100_000_000))
+            }
         }
 
         binding.homeViewModel = viewModel

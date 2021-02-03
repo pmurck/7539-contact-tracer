@@ -20,5 +20,9 @@ data class Contact(
         val endTimestamp: Long,
 
         @ColumnInfo(name = "avg_distance")
-        val avg_distance: Double
+        val avg_distance: Double,
+
+        // El id que genera el backend para este contacto
+        @ColumnInfo(name = "uploaded_contact_id")
+        var uploadedContactId: Long? = null
 )

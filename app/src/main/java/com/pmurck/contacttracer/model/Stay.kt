@@ -18,4 +18,8 @@ data class Stay(
 
         @ColumnInfo(name = "timestamp_end")
         val endTimestamp: Long? = null,
+
+        // El id que genera el backend para esta estadia
+        @ColumnInfo(name = "uploaded_contact_id")
+        var uploadedContactId: Long? = null
 )

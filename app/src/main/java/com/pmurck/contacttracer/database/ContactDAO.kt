@@ -23,6 +23,9 @@ interface ContactDAO {
     @Query("SELECT * from contact WHERE id = :key")
     suspend fun get(key: Long): Contact?
 
+    @Query("SELECT * FROM contact WHERE uploaded_contact_id IS NULL")
+    suspend fun getNotUploaded(): List<Contact>
+
     @Query("SELECT * from contact ORDER BY timestamp_start DESC")
     fun getAll(): LiveData<List<Contact>>
 }

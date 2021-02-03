@@ -29,7 +29,7 @@ class ContactGenerationWorker(appContext: Context, workerParams: WorkerParameter
     }
 
     override suspend fun doWork(): Result {
-        val sharedPrefs = applicationContext.getSharedPreferences(Constants.SHARED_PREFS_CONFIG_KEY, Context.MODE_PRIVATE)
+        val sharedPrefs = applicationContext.getSharedPreferences(Constants.SHARED_PREFS_CONFIG_NAME, Context.MODE_PRIVATE)
         val lastContactGenerationTimestamp = sharedPrefs.getLong(Constants.CONTACT_GEN_TIMESTAMP_PREF_KEY, 0L)
         val currentContactGenerationTimestamp = System.currentTimeMillis()
         Log.d("ContactGenWorker", "Iniciando el worker, tomamos pings desde ${Date(lastContactGenerationTimestamp)}")

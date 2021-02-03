@@ -3,6 +3,7 @@
     package="com.pmurck.contacttracer">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
@@ -11,7 +12,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ContactTracer">
+        android:theme="@style/Theme.ContactTracer"
+        android:usesCleartextTraffic="true">
+
 
         <service
             android:name=".BeaconService"

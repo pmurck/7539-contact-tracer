@@ -9,7 +9,7 @@ import com.pmurck.contacttracer.model.Contact
 import com.pmurck.contacttracer.model.Ping
 import com.pmurck.contacttracer.model.Stay
 
-@Database(entities = [Ping::class, Stay::class, Contact::class], version = 2, exportSchema = false)
+@Database(entities = [Ping::class, Stay::class, Contact::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract val pingDAO: PingDAO

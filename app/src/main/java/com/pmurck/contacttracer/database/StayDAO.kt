@@ -26,4 +26,8 @@ interface StayDAO {
     @Query("SELECT * from stay WHERE timestamp_end IS NULL")
     fun getCurrent(): LiveData<Stay?>
 
+    // Sin la posible estadia en curso
+    @Query("SELECT * FROM stay WHERE timestamp_end IS NOT NULL AND uploaded_contact_id IS NULL")
+    suspend fun getNotUploaded(): List<Stay>
+
 }

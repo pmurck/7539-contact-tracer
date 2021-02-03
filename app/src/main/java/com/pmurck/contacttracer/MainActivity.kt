@@ -32,12 +32,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         //Worker setup TODO: cambiar intervalo
-        val contactGenWorkRequest = PeriodicWorkRequestBuilder<ContactGenerationWorker>(1, TimeUnit.HOURS)
+        val contactGenWorkRequest = PeriodicWorkRequestBuilder<ContactGenerationWorker>(4, TimeUnit.HOURS)
             .build()
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
             "contactGeneration",
             ExistingPeriodicWorkPolicy.KEEP,
             contactGenWorkRequest
+        )
+
+        //Worker setup TODO: cambiar intervalo, (limitar a wifi para debug)
+        val backendSyncWorkRequest = PeriodicWorkRequestBuilder<BackendSynchronizationWorker>(8, TimeUnit.HOURS)
+            .build()
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+            "backendSynchronization",
+            ExistingPeriodicWorkPolicy.REPLACE,
+            backendSyncWorkRequest
         )
 
     }

@@ -3,6 +3,7 @@ package com.pmurck.contacttracer
 
 import android.app.Notification
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
@@ -37,7 +38,7 @@ class BeaconService : LifecycleService() {
 
     private val manufacturerUuid = UUID.fromString("01234567-89AB-CD01-2345-67890ABCD012")
 
-    private val dni: Int = Random.nextInt(1000000,99999999)
+
 
     private var userUuid = UUID.randomUUID()
 
@@ -48,6 +49,9 @@ class BeaconService : LifecycleService() {
 
         pingDAO = AppDatabase.getInstance(application).pingDAO
 
+        val sharedPrefs = applicationContext.getSharedPreferences(Constants.SHARED_PREFS_CONFIG_NAME, Context.MODE_PRIVATE)
+        val dni = sharedPrefs.getInt(Constants.DEVICE_ID_PREF_KEY, 99_999_999) //no deberia usar defValue
+        // CloseToMe requiere un UUID
         userUuid = UUID.fromString(UUID.randomUUID().toString().replaceBefore("-", dni.toString().padStart(8, '0')))
 
         initCloseToMe()
