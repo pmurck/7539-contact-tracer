@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_contactListFragment"
             app:destination="@id/contactListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_pingListFragment"
+            app:destination="@id/pingListFragment" />
     </fragment>
     <fragment
         android:id="@+id/scannerFragment"
@@ -25,4 +28,8 @@
         android:id="@+id/contactListFragment"
         android:name="com.pmurck.contacttracer.contacts.ContactListFragment"
         android:label="ContactListFragment" />
+    <fragment
+        android:id="@+id/pingListFragment"
+        android:name="com.pmurck.contacttracer.pings.PingListFragment"
+        android:label="PingListFragment" />
 </navigation>

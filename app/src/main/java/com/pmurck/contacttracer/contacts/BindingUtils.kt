@@ -4,6 +4,7 @@ package com.pmurck.contacttracer.contacts
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.pmurck.contacttracer.R
+import com.pmurck.contacttracer.dateFormatter
 import com.pmurck.contacttracer.model.Contact
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,8 +17,7 @@ fun TextView.setLastContactGenerationDate(date: Date){
 
 @BindingAdapter("contactStartDateFormatted")
 fun TextView.setStartDateFormatted(contact: Contact) {
-    text = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
-        .format(Date(contact.startTimestamp)).toString()
+    text = dateFormatter(contact.startTimestamp)
 }
 
 @BindingAdapter("contactDurationFormatted")

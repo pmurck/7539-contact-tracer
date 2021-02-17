@@ -6,4 +6,5 @@
     <string name="last_update">Última actualización: %s</string>
     <string name="dni_is">DNI: %1$d</string>
     <string name="avg_distance_is">Distancia promedio: %,.2f m</string>
+    <string name="distance_is">Distancia: %,.2f m</string>
 </resources>
