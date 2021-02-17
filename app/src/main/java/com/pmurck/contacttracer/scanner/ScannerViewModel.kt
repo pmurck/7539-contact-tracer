@@ -16,6 +16,7 @@ class ScannerViewModel(
 
     private var detectionState: DetectionState = NoCodes()
     private var stayPolicy: (qrCode: String) -> Unit = {}
+    private lateinit var allowedCodes: List<String>
 
     private val _qrScanStatus = MutableLiveData<String>()
     val qrScanStatus: LiveData<String>
@@ -30,14 +31,16 @@ class ScannerViewModel(
         currentStay.observeForever{
             if (it == null) {
                 stayPolicy = ::saveStay
+                allowedCodes = listOf()
             } else {
                 stayPolicy = ::updateStay
+                allowedCodes = listOf(it.qrCode)
             }
         }
     }
 
     fun onBarcodesDetected(codes: List<String>) {
-        this.detectionState = this.detectionState.onBarcodesDetected(codes)
+        this.detectionState = this.detectionState.onBarcodesDetected(codes, allowedCodes)
 
         if (this.detectionState.statusChanged) {
             _qrScanStatus.value = this.detectionState.status
