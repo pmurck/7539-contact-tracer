@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_homeFragment_to_pingListFragment"
             app:destination="@id/pingListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_nearbyDevicesFragment"
+            app:destination="@id/nearbyDevicesFragment" />
     </fragment>
     <fragment
         android:id="@+id/scannerFragment"
@@ -32,4 +35,8 @@
         android:id="@+id/pingListFragment"
         android:name="com.pmurck.contacttracer.pings.PingListFragment"
         android:label="PingListFragment" />
+    <fragment
+        android:id="@+id/nearbyDevicesFragment"
+        android:name="com.pmurck.contacttracer.nearby.NearbyDevicesFragment"
+        android:label="NearbyDevicesFragment" />
 </navigation>

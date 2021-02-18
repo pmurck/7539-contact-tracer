@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="nearbyDevicesViewModel"
+            type="com.pmurck.contacttracer.nearby.NearbyDevicesViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/nearby_devices_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{@string/nearby_devices_within_last_minutes(nearbyDevicesViewModel.minutes)}"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textAlignment="center"
+            tools:text="Dispositivos cercanos\nDatos de los ultimos 5 minutos"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/list_item_ping_with_min_distance" />
+
+
+    </LinearLayout>
+</layout>

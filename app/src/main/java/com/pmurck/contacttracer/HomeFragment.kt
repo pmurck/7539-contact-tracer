@@ -72,6 +72,7 @@ class HomeFragment : Fragment() {
         binding.goToScanner.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToScannerFragment()) }
         binding.goToContacts.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToContactListFragment()) }
         binding.goToPings.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPingListFragment()) }
+        binding.goToNearbyDevices.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToNearbyDevicesFragment()) }
 
         BeaconService.state.observe(viewLifecycleOwner, Observer { state ->
             //log("Beacon state: $state")
