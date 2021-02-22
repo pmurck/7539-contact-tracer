@@ -9,4 +9,5 @@
     <string name="distance_is">Distancia: %,.2f m</string>
     <string name="lowest_distance_is">Menor Distancia: %,.2f m</string>
     <string name="nearby_devices_within_last_minutes">Dispositivos cercanos\nDatos de los últimos %d minutos</string>
+    <string name="code_is">Código: %s</string>
 </resources>

@@ -30,4 +30,7 @@ interface StayDAO {
     @Query("SELECT * FROM stay WHERE timestamp_end IS NOT NULL AND uploaded_contact_id IS NULL")
     suspend fun getNotUploaded(): List<Stay>
 
+    @Query("SELECT * from stay WHERE timestamp_end IS NOT NULL ORDER BY timestamp_start DESC")
+    fun getAllMinusCurrent(): LiveData<List<Stay>>
+
 }

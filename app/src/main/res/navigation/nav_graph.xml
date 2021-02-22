@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_homeFragment_to_nearbyDevicesFragment"
             app:destination="@id/nearbyDevicesFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_stayListFragment"
+            app:destination="@id/stayListFragment" />
     </fragment>
     <fragment
         android:id="@+id/scannerFragment"
@@ -39,4 +42,8 @@
         android:id="@+id/nearbyDevicesFragment"
         android:name="com.pmurck.contacttracer.nearby.NearbyDevicesFragment"
         android:label="NearbyDevicesFragment" />
+    <fragment
+        android:id="@+id/stayListFragment"
+        android:name="com.pmurck.contacttracer.stays.StayListFragment"
+        android:label="StayListFragment" />
 </navigation>

@@ -65,14 +65,14 @@ class HomeFragment : Fragment() {
 
         binding.homeViewModel = viewModel
         binding.lifecycleOwner = this
-        //binding.user.text = "USER TODO"//"User: $userUuid"
-        //binding.log.movementMethod = ScrollingMovementMethod()
+
         binding.start.setOnClickListener { onStartClick() }
         binding.stop.setOnClickListener { onStopClick() }
         binding.goToScanner.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToScannerFragment()) }
         binding.goToContacts.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToContactListFragment()) }
         binding.goToPings.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPingListFragment()) }
         binding.goToNearbyDevices.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToNearbyDevicesFragment()) }
+        binding.goToStays.setOnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToStayListFragment()) }
 
         BeaconService.state.observe(viewLifecycleOwner, Observer { state ->
             //log("Beacon state: $state")

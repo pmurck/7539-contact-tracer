@@ -29,7 +29,7 @@ class HomeViewModel(
         } else {
             "Contabilizando estadía ... \n" +
                     "Código: ${it.qrCode}\n" +
-                    "Inicio: ${Date(it.startTimestamp)}"
+                    "Inicio: ${dateFormatter(it.startTimestamp)}"
         }
     }
 
