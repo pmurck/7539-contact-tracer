@@ -5,21 +5,22 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-object BackendApi {
+class BackendApi {
 
-    const val BASE_URL = "http://192.168.1.150:8000/" //TODO: tomar de otro lugar
+    companion object {
 
-    val retrofitService : BackendApiService by lazy {
+        fun getRetrofitService(baseUrl: String): BackendApiService {
 
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
+            val moshi = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
 
-        val retrofit = Retrofit.Builder()
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl(BASE_URL)
-            .build()
+            val retrofit = Retrofit.Builder()
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .baseUrl(baseUrl)
+                .build()
 
-        retrofit.create(BackendApiService::class.java)
+            return retrofit.create(BackendApiService::class.java)
+        }
     }
 }

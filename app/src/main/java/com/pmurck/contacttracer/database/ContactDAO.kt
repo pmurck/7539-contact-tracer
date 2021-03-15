@@ -1,14 +1,14 @@
 package com.pmurck.contacttracer.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.pmurck.contacttracer.model.Contact
 
 @Dao
 interface ContactDAO {
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertIgnoreExisting(contact: Contact)
 
     @Insert
     suspend fun insert(contact: Contact)

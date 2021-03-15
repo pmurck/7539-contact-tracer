@@ -1,0 +1,112 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="Sistema">
+
+        <EditTextPreference
+            app:key="base_url"
+            app:title="URL (Protocolo + Hostname + Puerto)"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="http://127.0.0.1:8000/"/>
+
+        <EditTextPreference
+            app:key="username"
+            app:title="Nombre de usuario"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="user"/>
+
+        <EditTextPreference
+            app:key="password"
+            app:title="Contraseña"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="pass"/>
+
+        <Preference
+            app:key="check_connection_and_auth"
+            app:title="Comprobar conexión y autenticación"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Requisitos para generación de un Contacto">
+
+        <SeekBarPreference
+            app:key="contact_gen_min_contact_time_in_minutes"
+            app:title="Duración mínima en minutos"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="15"
+            app:showSeekBarValue="true"
+            app:min="1"
+            app:seekBarIncrement="1"
+            app:updatesContinuously="false"
+            app:summary="Del primer al último Ping"
+            android:max="30"/>
+
+        <SeekBarPreference
+            app:key="contact_gen_max_time_diff_between_pings_in_seconds"
+            app:title="Diferencia máxima en segundos"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="60"
+            app:showSeekBarValue="true"
+            app:min="5"
+            app:seekBarIncrement="5"
+            app:updatesContinuously="false"
+            app:summary="Entre dos Pings consecutivos"
+            android:max="180"/>
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Generación de Contactos">
+
+        <Preference
+            app:key="contact_gen_last_update_timestamp"
+            app:title="Última ejecución exitosa"
+            />
+
+        <SeekBarPreference
+            app:key="contact_gen_repeat_interval"
+            app:title="Intervalo entre ejecuciones (horas)"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="8"
+            app:showSeekBarValue="true"
+            app:min="1"
+            app:seekBarIncrement="1"
+            app:updatesContinuously="false"
+            app:summary="Modificarlo fuerza una ejecución ahora"
+            android:max="24"/>
+
+        <Preference
+            app:key="contact_gen_run_now"
+            app:title="Ejecutar ahora"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Subida de Contactos y Estadías">
+
+        <Preference
+            app:key="uploader_last_update_timestamp"
+            app:title="Última subida exitosa"
+            />
+
+        <SeekBarPreference
+            app:key="uploader_repeat_interval"
+            app:title="Intervalo entre subidas (horas)"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="8"
+            app:showSeekBarValue="true"
+            app:min="1"
+            app:seekBarIncrement="1"
+            app:summary="Modificarlo fuerza una subida ahora"
+            app:updatesContinuously="false"
+            android:max="24"/>
+
+        <Preference
+            app:key="uploader_run_now"
+            app:title="Subir ahora"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

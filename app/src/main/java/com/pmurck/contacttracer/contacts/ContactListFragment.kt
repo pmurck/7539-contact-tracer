@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout.VERTICAL
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.pmurck.contacttracer.Constants
 import com.pmurck.contacttracer.database.AppDatabase
@@ -22,7 +23,7 @@ class ContactListFragment : Fragment() {
 
     private val viewModelFactory
         get() = ContactListViewModelFactory(AppDatabase.getInstance(requireActivity().application).contactDAO,
-                                            requireContext().getSharedPreferences(Constants.SHARED_PREFS_CONFIG_NAME, Context.MODE_PRIVATE))
+                                            PreferenceManager.getDefaultSharedPreferences(requireActivity().applicationContext))
 
     private val viewModel: ContactListViewModel by viewModels{viewModelFactory}
 

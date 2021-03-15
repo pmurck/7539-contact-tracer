@@ -3,6 +3,7 @@ package com.pmurck.contacttracer
 import android.content.Context
 import android.util.Log
 import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.pmurck.contacttracer.database.AppDatabase
@@ -12,11 +13,6 @@ import java.util.*
 
 class ContactGenerationWorker(appContext: Context, workerParams: WorkerParameters):
         CoroutineWorker(appContext, workerParams) {
-
-    companion object {
-        private const val MIN_CONTACT_TIME_IN_SECONDS = 15*60
-        private const val MAX_TIME_DIFF_BETWEEN_PINGS_FOR_CONTACT_IN_SECONDS = 1*60
-    }
 
     /*
         firstPing.timestamp <= secondPing.timestamp
@@ -29,14 +25,19 @@ class ContactGenerationWorker(appContext: Context, workerParams: WorkerParameter
     }
 
     override suspend fun doWork(): Result {
-        val sharedPrefs = applicationContext.getSharedPreferences(Constants.SHARED_PREFS_CONFIG_NAME, Context.MODE_PRIVATE)
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val lastContactGenerationTimestamp = sharedPrefs.getLong(Constants.CONTACT_GEN_TIMESTAMP_PREF_KEY, 0L)
         val currentContactGenerationTimestamp = System.currentTimeMillis()
         Log.d("ContactGenWorker", "Iniciando el worker, tomamos pings desde ${Date(lastContactGenerationTimestamp)}")
 
+        val MIN_CONTACT_TIME_IN_SECONDS = sharedPrefs.getInt(Constants.CONTACT_GEN_MIN_TIME_IN_MINUTES_PREF_KEY, 15) * 60
+        val MAX_TIME_DIFF_BETWEEN_PINGS_FOR_CONTACT_IN_SECONDS = sharedPrefs.getInt(Constants.CONTACT_GEN_MAX_TIME_DIFF_BETWEEN_PINGS_IN_SECONDS_PREF_KEY, 60).toLong()
+
+        Log.d("ContactGenWorker", "Requisitos de gen: duracion minima = ${MIN_CONTACT_TIME_IN_SECONDS}s ; diff maxima entre pings = ${MAX_TIME_DIFF_BETWEEN_PINGS_FOR_CONTACT_IN_SECONDS}s")
         val db = AppDatabase.getInstance(applicationContext)
         val pingDao = db.pingDAO
         val contactDao = db.contactDAO
+
                                                                 // para tomar algunos pings previos del corte
         val pinged_dnis = pingDao.getUniqueDNIsSince(lastContactGenerationTimestamp - (MIN_CONTACT_TIME_IN_SECONDS * 1000 / 2))
 
@@ -58,8 +59,8 @@ class ContactGenerationWorker(appContext: Context, workerParams: WorkerParameter
                     val contactLengthInSeconds = (lastPing.unixTimeStamp - firstPing.unixTimeStamp) / 1000
                     if (contactLengthInSeconds >= MIN_CONTACT_TIME_IN_SECONDS){
                         val avg_distance = distanceSumBySeconds / (contactLengthInSeconds)
-                        // TODO: check si ya existe (aca o antes) ; posible si se corto el worker
-                        contactDao.insert(Contact(
+
+                        contactDao.insertIgnoreExisting(Contact(
                                 dniNumber = firstPing.dniNumber,
                                 startTimestamp = firstPing.unixTimeStamp,
                                 endTimestamp = lastPing.unixTimeStamp,

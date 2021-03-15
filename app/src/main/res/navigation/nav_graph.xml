@@ -46,4 +46,8 @@
         android:id="@+id/stayListFragment"
         android:name="com.pmurck.contacttracer.stays.StayListFragment"
         android:label="Estadías" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.pmurck.contacttracer.SettingsFragment"
+        android:label="Ajustes" />
 </navigation>

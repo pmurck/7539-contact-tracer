@@ -9,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.PreferenceManager
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -19,6 +21,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //set default prefs
+        PreferenceManager.setDefaultValues(applicationContext, R.xml.root_preferences, true)
 
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -35,28 +40,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        //Worker setup TODO: cambiar intervalo
-        val contactGenWorkRequest = PeriodicWorkRequestBuilder<ContactGenerationWorker>(4, TimeUnit.HOURS)
-            .build()
-        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
-            "contactGeneration",
-            ExistingPeriodicWorkPolicy.KEEP,
-            contactGenWorkRequest
-        )
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
-        //Worker setup TODO: cambiar intervalo, (limitar a wifi para debug)
-        val backendSyncWorkRequest = PeriodicWorkRequestBuilder<BackendSynchronizationWorker>(8, TimeUnit.HOURS)
-            .build()
-        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
-            "backendSynchronization",
-            ExistingPeriodicWorkPolicy.REPLACE,
-            backendSyncWorkRequest
-        )
+        setupContactGenWorkerKeepExisting(applicationContext, sharedPrefs.getInt(Constants.CONTACT_GEN_REPEAT_INTERVAL_HOURS_PREF_KEY, 8))
+        setupBackendSyncWorkerKeepExisting(applicationContext, sharedPrefs.getInt(Constants.BACKEND_SYNC_REPEAT_INTERVAL_HOURS_PREF_KEY, 8))
+
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         val appBarConfiguration = AppBarConfiguration(navController.graph)
+        setSupportActionBar(toolbar)
         toolbar.setupWithNavController(navController, appBarConfiguration)
     }
 

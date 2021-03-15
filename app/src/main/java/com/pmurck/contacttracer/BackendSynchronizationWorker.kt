@@ -2,6 +2,8 @@ package com.pmurck.contacttracer
 
 import android.content.Context
 import android.util.Log
+import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.pmurck.contacttracer.database.AppDatabase
@@ -18,11 +20,6 @@ import kotlin.properties.Delegates
 
 class BackendSynchronizationWorker(appContext: Context, workerParams: WorkerParameters):
         CoroutineWorker(appContext, workerParams) {
-
-    companion object { // TODO: mover a otro lugar / esconder
-        private const val USERNAME = "user@lala.com"
-        private const val PASSWORD = "user@lala.com"
-    }
 
     private fun milliDiffToSeconds(startMilli: Long, endMilli: Long): Long =
         TimeUnit.SECONDS.convert(endMilli - startMilli, TimeUnit.MILLISECONDS)
@@ -50,21 +47,28 @@ class BackendSynchronizationWorker(appContext: Context, workerParams: WorkerPara
     private var myDni by Delegates.notNull<Int>()
 
     override suspend fun doWork(): Result {
-        val apiService = BackendApi.retrofitService
+        val currentSyncTimestamp = System.currentTimeMillis()
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+
+        val baseUrl = sharedPrefs.getString("base_url", "http://192.168.1.150:8000/")!!
+        val username = sharedPrefs.getString("username", "missingUsername")!!
+        val password = sharedPrefs.getString("password", "missingPassword")!!
+
+        val apiService = BackendApi.getRetrofitService(baseUrl)
         // on timeout, que falle
-        val loginResponse = apiService.login(User(USERNAME, PASSWORD))
+        val loginResponse = apiService.login(User(username, password))
         if (!loginResponse.isSuccessful) {
             Log.i(
                 "BackendSyncWorker",
-                "Fallo la autenticación contra el backend ${BackendApi.BASE_URL} - Error: ${loginResponse.code()}"
+                "Fallo la autenticación contra el backend ${baseUrl} - Error: ${loginResponse.code()}"
             )
             return Result.failure()
         }
 
         val authToken = loginResponse.body()!!.code
 
-        val sharedPrefs = applicationContext.getSharedPreferences(Constants.SHARED_PREFS_CONFIG_NAME, Context.MODE_PRIVATE)
-        myDni = sharedPrefs.getInt(Constants.DEVICE_ID_PREF_KEY, 99_999_999) //no deberia usar defValue
+        val sharedPrefsDNI = applicationContext.getSharedPreferences(Constants.SHARED_PREFS_CONFIG_NAME, Context.MODE_PRIVATE)
+        myDni = sharedPrefsDNI.getInt(Constants.DEVICE_ID_PREF_KEY, 99_999_999) //no deberia usar defValue
         val db = AppDatabase.getInstance(applicationContext)
         val stayDao = db.stayDAO
         val contactDao = db.contactDAO
@@ -79,7 +83,7 @@ class BackendSynchronizationWorker(appContext: Context, workerParams: WorkerPara
             } else {
                 Log.i(
                     "BackendSyncWorker",
-                    "Fallo la carga de contacto contra el backend ${BackendApi.BASE_URL} - Error: ${response.code()}\nJSON: ${btContactFrom(contact)}"
+                    "Fallo la carga de contacto contra el backend ${baseUrl} - Error: ${response.code()}\nJSON: ${btContactFrom(contact)}"
                 )
                 // Result.failure() ? pensar
             }
@@ -95,10 +99,14 @@ class BackendSynchronizationWorker(appContext: Context, workerParams: WorkerPara
             } else {
                 Log.i(
                     "BackendSyncWorker",
-                    "Fallo la carga de estadia contra el backend ${BackendApi.BASE_URL} - Error: ${response.code()}\nJSON: ${qrStayContactFrom(stay)}"
+                    "Fallo la carga de estadia contra el backend ${baseUrl} - Error: ${response.code()}\nJSON: ${qrStayContactFrom(stay)}"
                 )
                 // Result.failure() ? pensar
             }
+        }
+
+        sharedPrefs.edit {
+            putLong(Constants.BACKEND_SYNC_TIMESTAMP_PREF_KEY, currentSyncTimestamp)
         }
 
         return Result.success()
